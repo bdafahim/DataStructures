@@ -6,7 +6,7 @@
 using namespace std;
 
 vector<int>g[Max];
-bool v[Max];
+map<int,int>v;
 
 void addEdge(int a, int b)
 {
@@ -18,43 +18,31 @@ void bfs(int u)
 {
     queue<int>q;
     q.push(u);
-    v[u] = true;
+    v[u] = 0;
 
     while(!q.empty())
     {
         int f = q.front();
         q.pop();
-        cout<<"Front : "<<f<<" ";
 
-        for(auto i = g[f].begin();i!=g[f].end();i++)
+        for(auto i=0;i<g[f].size();i++)
         {
-            if(!v[*i])
+            int x = g[f][i];
+            if(!v.count(x))
             {
-                q.push(*i);
-                v[*i] = true;
+                q.push(x);
+                v[x] += v[f] + 1;
             }
         }
     }
 }
 
-void printElements(vector<int>v[Max],int n)
-{
-    for(int i=0; i<n; i++)
-    {
-        cout << "Elements at index "<< i << ": ";
-        for(auto it = v[i].begin(); it!= v[i].end();it++)
-        {
-            cout<<*it<<" ";
-        }
-        cout<<"\n";
-    }
-}
 
 int main()
 {
     int nodes,edges;
-    cout<<"Enter the number of nodes"<<endl;
-    cin>>nodes;
+//    cout<<"Enter the number of nodes"<<endl;
+//    cin>>nodes;
     cout<<"Enter the number of edges"<<endl;
     cin>>edges;
 
@@ -64,12 +52,15 @@ int main()
         addEdge(x,y);
     }
 
-    for(int i=0;i<nodes;i++)
+    cout<<"Enter the source"<<endl;
+    int src;
+    cin>>src;
+
+    bfs(src);
+
+    for(auto it = v.begin();it!=v.end();it++)
     {
-        if(!v[i])
-        {
-            bfs(i);
-        }
+        cout<<"node : "<<it->first<<" weight: "<<it->second<<endl;
     }
 
   return 0;
